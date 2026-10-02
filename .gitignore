@@ -1,0 +1,5 @@
+# Source notes contain internal repository names and PR numbers.
+# They must never be published with the site.
+github_prs.md
+CLAUDE.md
+.claude/

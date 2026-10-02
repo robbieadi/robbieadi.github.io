@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Robbie Ardiansyah, Android Engineer</title>
+<meta name="description" content="Android engineer in Jakarta with seven years of Kotlin in production: payments, point-of-sale hardware, offline-first apps and delivery systems. Open to relocation.">
+<meta property="og:title" content="Robbie Ardiansyah, Android Engineer">
+<meta property="og:description" content="Seven years of production Android: payments, POS hardware, offline-first apps, delivery systems.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131514" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="bar">
+    <a class="home" href="./">Robbie Ardiansyah</a>
+    <nav aria-label="Primary">
+      <a class="opt" href="#work">Work</a>
+      <a class="opt" href="#apps">Apps</a>
+      <a href="mailto:adirobbie@gmail.com">Email</a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="hero">
+      <p class="eyebrow">Android engineer · Jakarta, Indonesia · open to relocation</p>
+      <h1>I build Android apps that run shops, take payments and talk to hardware.</h1>
+      <p class="lede">
+        Since November 2019 I've been at <strong>Stamps Indonesia</strong>, a CRM, loyalty and
+        customer-engagement platform, where I also supervise junior engineers across most of our
+        Android work. Most of what I've shipped lives in private repositories or inside
+        apps that carry a client's name. This page is the part that's public.
+      </p>
+      <div class="contact">
+        <a href="mailto:adirobbie@gmail.com">adirobbie@gmail.com</a>
+        <a href="https://github.com/robbieadi">github.com/robbieadi</a>
+      </div>
+    </div>
+
+    <div class="figures" role="list">
+      <div class="figure" role="listitem"><span class="n">4,589</span><span class="l">pull requests across 63 repositories, Nov 2019 – Oct 2026</span></div>
+      <div class="figure" role="listitem"><span class="n">~75%</span><span class="l">faster inventory sync, ~15s → ~4s on 15,000+ records</span></div>
+      <div class="figure" role="listitem"><span class="n">&gt;98%</span><span class="l">crash-free rate, sustained</span></div>
+      <div class="figure" role="listitem"><span class="n">190x</span><span class="l">faster report generation, 41.91s → 0.22s</span></div>
+    </div>
+
+    <section id="work" aria-labelledby="work-h">
+      <div class="section-head">
+        <h2 id="work-h">Selected work</h2>
+        <p>Problem, constraint, decision, result</p>
+      </div>
+      <ul class="cases">
+        <li><a class="case" href="work/bca-edc.html">
+          <span class="idx">01</span>
+          <span>
+            <h3>A payment terminal with no SDK <span class="arrow" aria-hidden="true">→</span></h3>
+            <p>BCA handed over protocol documentation and nothing else. I wrote the wire format, USB serial I/O and polling loop so a self-service kiosk could take QRIS and card payments.</p>
+          </span>
+          <span class="tag">USB serial</span>
+        </a></li>
+        <li><a class="case" href="work/order-sync.html">
+          <span class="idx">02</span>
+          <span>
+            <h3>Keeping open orders in sync across tills <span class="arrow" aria-hidden="true">→</span></h3>
+            <p>Real-time open-order sync between POS terminals over Firestore, for an app built to work alone and offline. Revision IDs filter out stale updates and echoes, and closed sales can never be overwritten.</p>
+          </span>
+          <span class="tag">Firestore</span>
+        </a></li>
+        <li><a class="case" href="work/migrations.html">
+          <span class="idx">03</span>
+          <span>
+            <h3>Rebuilding a POS while it takes payments <span class="arrow" aria-hidden="true">→</span></h3>
+            <p>MVP to MVVM, XML to Jetpack Compose, Realm to Room. Done one piece at a time, still in progress, in an app that never stops processing transactions.</p>
+          </span>
+          <span class="tag">Compose · Room</span>
+        </a></li>
+        <li><a class="case" href="work/printers.html">
+          <span class="idx">04</span>
+          <span>
+            <h3>One contract for every receipt printer <span class="arrow" aria-hidden="true">→</span></h3>
+            <p>Thermal printers from several vendors over Bluetooth, USB and network behind one interface. Supporting new hardware means implementing it, not adding another branch.</p>
+          </span>
+          <span class="tag">Hardware</span>
+        </a></li>
+        <li><a class="case" href="work/diagnostic-logging.html">
+          <span class="idx">05</span>
+          <span>
+            <h3>Logs for bugs nobody could reproduce <span class="arrow" aria-hidden="true">→</span></h3>
+            <p>An on-device log of data changes, network traffic and user actions in five rotating 5MB files, zipped and uploaded on demand or after a crash. I designed it and led the juniors who built it. Operations later used it to flag suspicious user activity, which is not what it was designed for.</p>
+          </span>
+          <span class="tag">25MB rotating</span>
+        </a></li>
+        <li><a class="case" href="work/fleet.html">
+          <span class="idx">06</span>
+          <span>
+            <h3>Fleet, a delivery platform from scratch <span class="arrow" aria-hidden="true">→</span></h3>
+            <p>I built the dispatch platform and worked on the rider app that talks to it: task lifecycle, rider assignment, distance-based fees, live tracking, and third-party courier integrations.</p>
+          </span>
+          <span class="tag">Backend + Android</span>
+        </a></li>
+        <li><a class="case" href="work/report-speedup.html">
+          <span class="idx">07</span>
+          <span>
+            <h3>Reports, 190x faster <span class="arrow" aria-hidden="true">→</span></h3>
+            <p>Three report generators moved from Python-level loops to database-level operations. 41.91s became 0.22s.</p>
+          </span>
+          <span class="tag">190x · 57x · 53x</span>
+        </a></li>
+      </ul>
+    </section>
+
+    <section id="public-code" aria-labelledby="code-h">
+      <div class="section-head">
+        <h2 id="code-h">Public code</h2>
+        <p>Public repositories</p>
+      </div>
+      <ul class="cases">
+        <li><a class="case" href="https://github.com/ui/django-post_office/pull/418">
+          <span class="idx">PR</span>
+          <span>
+            <h3>django-post_office: show HTML email bodies in the admin <span class="arrow" aria-hidden="true">↗</span></h3>
+            <p>django-post_office is an open-source Django app for sending email asynchronously. Its admin wasn't displaying the HTML body of emails; my fix was merged in October 2022.</p>
+          </span>
+          <span class="tag">Merged</span>
+        </a></li>
+        <li><a class="case" href="https://github.com/ui/stamps-api-docs/pulls?q=is%3Apr+author%3Arobbieadi+is%3Amerged">
+          <span class="idx">9×</span>
+          <span>
+            <h3>Stamps public API documentation <span class="arrow" aria-hidden="true">↗</span></h3>
+            <p>Nine merged pull requests to Stamps' public API docs in 2022, covering customer profile, membership and activity endpoints.</p>
+          </span>
+          <span class="tag">Merged</span>
+        </a></li>
+      </ul>
+    </section>
+
+    <section id="apps" aria-labelledby="apps-h">
+      <div class="section-head">
+        <h2 id="apps-h">Apps I've worked on</h2>
+        <p>Public apps</p>
+      </div>
+      <ul class="apps">
+        <li>
+          <div class="name"><strong>Burger King Indonesia</strong><a href="https://play.google.com/store/apps/details?id=burgerking.id.android">Google Play ↗</a></div>
+          <p>Dine-in, takeout and delivery ordering with in-app payment, monthly promotions, delivery tracking with Google Maps address selection and geofencing, and push notifications.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Omni POS</strong><a href="https://play.google.com/store/apps/details?id=omni.id.android">Google Play ↗</a></div>
+          <p>Point of sale for restaurants and retail that keeps working offline. Transactions, member points and voucher redemption, receipt and kitchen printing, and sync when the connection returns.</p>
+        </li>
+        <li>
+          <div class="name"><strong>OMNI Kiosk</strong><a href="https://play.google.com/store/apps/details?id=id.co.stamps.kiosk">Google Play ↗</a></div>
+          <p>Self-service ordering kiosk with real-time menu updates, add-ons and modifiers, product recommendations, loyalty points, and card and QRIS payment at the kiosk.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Omni KDS</strong><a href="https://play.google.com/store/apps/details?id=id.co.stamps.kds">Google Play ↗</a></div>
+          <p>Kitchen display system: orders go to a screen in the kitchen so the team stays in sync, speeds up service and makes fewer mistakes. Includes kitchen ticket printing.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Fleet Rider App</strong><a href="https://play.google.com/store/apps/details?id=com.fleet.android">Google Play ↗</a></div>
+          <p>For in-house delivery riders: check in and out for deployments, customer details with map directions, and real-time order status from dispatch to completion.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Pickaroo</strong><a href="https://play.google.com/store/apps/details?id=com.pickaroo.android">Google Play ↗</a></div>
+          <p>All-in-one delivery in the Philippines for food, groceries, retail and everyday essentials, with separate apps for merchants and delivery crew.</p>
+          <p class="more">Also: <a href="https://play.google.com/store/apps/details?id=com.pickaroo.merchant_app">Merchant</a> · <a href="https://play.google.com/store/apps/details?id=com.pickaroo.crewapp">Crew</a></p>
+        </li>
+        <li>
+          <div class="name"><strong>Stamps</strong><a href="https://play.google.com/store/apps/details?id=id.stamps.android">Google Play ↗</a></div>
+          <p>Loyalty app for checking your stamps at favourite merchants and discovering their rewards, benefits and promotions.</p>
+        </li>
+        <li>
+          <div class="name"><strong>CMK Club</strong><a href="https://play.google.com/store/apps/details?id=cmk.mobile.android">Google Play ↗</a></div>
+          <p>Loyalty programme for Mondial, Frank &amp; co., Miss Mondial and The Palace: jewellery collections, promotions, membership tiers, points and rewards.</p>
+        </li>
+        <li>
+          <div class="name"><strong>JR App</strong><a href="https://play.google.com/store/apps/details?id=com.jr.android">Google Play ↗</a></div>
+          <p>An app for Central Mega Kencana's frontline staff to manage customers, activities, requests and check-ins.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Indomaret Poinku</strong><a href="https://play.google.com/store/apps/details?id=mypoin.indomaret.android">Google Play ↗</a></div>
+          <p>Indomaret's loyalty app: points, stamps and i-Coupons, promotions, missions with prizes, and payment with i.Saku.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Popeyes Indonesia</strong><a href="https://play.google.com/store/apps/details?id=com.popeyes.id">Google Play ↗</a></div>
+          <p>Ordering with customisable meals, saved payment methods, app-only deals, and table-number ordering in store.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Marugame Udon</strong><a href="https://play.google.com/store/apps/details?id=com.marugame.indonesia">Google Play ↗</a></div>
+          <p>Ordering with delivery type and time selection, promotions, new menu updates, and reward points every time you dine.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Pancious</strong><a href="https://play.google.com/store/apps/details?id=pancious.memberships.android">Google Play ↗</a></div>
+          <p>Loyalty app for Pancious diners: points, member benefits and exclusive privileges.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Clarins Passport</strong><a href="https://play.google.com/store/apps/details?id=clarins_membership.id.android">Google Play ↗</a></div>
+          <p>Clarins' loyalty programme in Indonesia: product information, points earned at Clarins counters, and rewards to redeem them for.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Noneaway</strong><a href="https://noneaway.com/">noneaway.com ↗</a></div>
+          <p>Property marketplace for the Philippines to buy, rent and sell, with paged property listings.</p>
+        </li>
+        <li>
+          <div class="name"><strong>Imperial's Kitchen</strong><a href="https://play.google.com/store/apps/details?id=com.perkssbazaar.member.imperialskitchen">Google Play ↗</a></div>
+          <p>F&amp;B ordering and loyalty. I worked on the app from 2020 to 2021; the version on Google Play today is by another vendor.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="measured-h">
+      <div class="section-head">
+        <h2 id="measured-h">Measured improvements</h2>
+        <p>Before and after</p>
+      </div>
+      <dl class="rows">
+        <div class="row">
+          <dt>−84% worst frame</dt>
+          <dd>Tab switching on the POS order list: worst frame 257.8 → 40.7ms on a tablet, and 334.9 → 204.9ms on a Sunmi T2 running Android 7.1, the app's minimum. Redundant list rebuilds per tab switch dropped from 4 to 1. Measured with <code>gfxinfo framestats</code> over 9 interleaved runs per variant (Mann-Whitney U, p &lt; 0.05). Navigating away and back showed no significant change, and I reported that too.</dd>
+        </div>
+        <div class="row">
+          <dt>−19% render time</dt>
+          <dd>The new-order screen of the POS, benchmarked across repeated lifecycle runs: 19% faster overall render, 22% faster view inflation, 23% faster resume.</dd>
+        </div>
+        <div class="row">
+          <dt>26 → 14 min</dt>
+          <dd>CI build time, about 46% shorter, after moving to <code>setup-gradle</code> v4 with proper Gradle caching.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="stack-h">
+      <div class="section-head">
+        <h2 id="stack-h">What I work with</h2>
+        <p>Kotlin, about seven years</p>
+      </div>
+      <ul class="stack">
+        <li><b>Language and UI</b>Kotlin, Jetpack Compose, Coroutines, Flow, StateFlow, Navigation, Coil</li>
+        <li><b>Architecture</b>MVVM + Repository, Clean Architecture, multi-module Gradle, Hilt, Dagger 2</li>
+        <li><b>Data and background work</b>Room, Realm, DataStore, Retrofit, OkHttp, Kotlin Serialization, Moshi, WorkManager</li>
+        <li><b>Firebase</b>Crashlytics, Analytics, Auth, FCM, Firestore, Storage, Remote Config</li>
+        <li><b>Hardware and device</b>Bluetooth Classic, USB serial, NFC, CameraX, barcode scanning, Google Maps, geofencing, background location</li>
+        <li><b>Testing and quality</b>JUnit, Mockito, MockK, Robolectric, Espresso, LeakCanary, detekt, ktlint, GitHub Actions</li>
+        <li><b>AI in the workflow</b>Introduced AI code review in CI (Qodo PR-Agent). AI-assisted implementation under review, and AI on diagnostic logs during triage.</li>
+        <li><b>Backend</b>Django, DRF, Django Ninja (OpenAPI), PostgreSQL, Redis, AWS (S3, SES, SNS)</li>
+        <li><b>Daily driver</b>Linux (Arch)</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="bg-h">
+      <div class="section-head">
+        <h2 id="bg-h">Background</h2>
+      </div>
+      <dl class="rows">
+        <div class="row">
+          <dt>2019 – now</dt>
+          <dd><p><strong>Software Developer (Android), Stamps Indonesia.</strong> Stamps builds a CRM and loyalty engine, a customer data platform, an order management system, a fleet management system and WhatsApp API services for global brands. I'm mainly on Android, the POS, kiosk and client apps, and I also work on the Django services behind them. I supervise junior engineers across most of our projects, especially the Android apps and the systems I've built: I set the design and direction, they implement it, and I review the work.</p></dd>
+        </div>
+        <div class="row">
+          <dt>2018</dt>
+          <dd>SMK Negeri 1 Karawang, Computer and Network Engineering. A vocational upper-secondary school, not a university degree.</dd>
+        </div>
+      </dl>
+    </section>
+  </main>
+
+  <footer>
+    <p class="cta">Hiring for Android? I'd like to hear about it.</p>
+    <p><a href="mailto:adirobbie@gmail.com">adirobbie@gmail.com</a> · <a href="https://github.com/robbieadi">GitHub</a> · Jakarta, open to relocation</p>
+    <p class="small">Plain HTML and CSS, no framework.</p>
+  </footer>
+</div>
+<script src="assets/theme.js"></script>
+</body>
+</html>

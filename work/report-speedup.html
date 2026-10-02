@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reports, 190x faster · Robbie Ardiansyah</title>
+<meta name="description" content="Moving three report generators from Python-level iteration to database-level operations: 41.91s to 0.22s.">
+<meta property="og:title" content="Reports, 190x faster">
+<meta property="og:description" content="Moving three report generators from Python-level iteration to database-level operations: 41.91s to 0.22s.">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131514" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="bar">
+    <a class="home" href="../">Robbie Ardiansyah</a>
+    <nav aria-label="Primary">
+      <a class="opt" href="../#work">Work</a>
+      <a class="opt" href="../#apps">Apps</a>
+      <a href="mailto:adirobbie@gmail.com">Email</a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="article-head">
+      <a class="back" href="../#work">← All work</a>
+      <h1>Reports, 190x faster</h1>
+      <p class="lede">Three report generators in a Django reporting service for a retail loyalty programme were slow enough to be a problem. I led the work to fix them by moving the computation from Python into the database.</p>
+      <dl class="facts">
+        <div><dt>Best case</dt><dd>41.91s → 0.22s</dd></div>
+        <div><dt>Reports</dt><dd>3 generators</dd></div>
+        <div><dt>Built with</dt><dd>Python, Django ORM</dd></div>
+      </dl>
+    </div>
+
+    <article class="prose">
+      <h2><span class="k">01</span>The problem</h2>
+      <p>The reports covered point expirations and reward redemptions. They were written the straightforward way: fetch rows, loop over them in Python, look up related data as you go, add things up. That's fine with a few hundred rows. With a real programme's data it means many round trips to the database and a lot of Python doing what the database does better.</p>
+
+      <h2><span class="k">02</span>The decision</h2>
+      <p>Push the work down to the database and let Python receive results, not raw material:</p>
+      <ul>
+        <li><strong>Queryset annotations</strong> to compute per-row values in SQL instead of in a loop.</li>
+        <li><strong><code>Coalesce</code></strong> to handle missing values inside the query, so Python doesn't have to patch nulls row by row.</li>
+        <li><strong><code>values()</code></strong> to fetch only the columns the report uses rather than full model instances.</li>
+        <li><strong><code>select_related</code></strong> to join related tables in one query instead of one lookup per row.</li>
+      </ul>
+      <p>I applied the same approach to each generator in turn and measured each one.</p>
+
+      <h2><span class="k">03</span>Result</h2>
+      <div class="table-scroll">
+      <table class="results">
+        <thead><tr><th>Report</th><th>Before</th><th>After</th><th>Speedup</th></tr></thead>
+        <tbody>
+          <tr><td>Expiration journal</td><td class="num">41.91s</td><td class="num">0.22s</td><td class="num win">~190x</td></tr>
+          <tr><td>Expiration log</td><td class="num">7.10s</td><td class="num">0.12s</td><td class="num win">~57x</td></tr>
+          <tr><td>Redemption details</td><td class="num">5.73s</td><td class="num">0.11s</td><td class="num win">~53x</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="bars" aria-hidden="true">
+        <div class="b"><span>Journal, before</span><div class="track"><div class="fill" style="width:100%">41.91s</div></div></div>
+        <div class="b"><span>Journal, after</span><div class="track"><div class="fill after" style="width:0.6%">0.22s</div></div></div>
+      </div>
+      <p>This isn't Android work, and that's why it's here. The habit is the same on either platform: find where the work actually happens, measure it, and move it to the layer that's built for it.</p>
+    </article>
+
+    <nav class="next" aria-label="More case studies">
+      <a href="fleet.html"><small>Previous</small>Fleet, a delivery platform from scratch</a>
+      <a class="r" href="../"><small>Back</small>All work</a>
+    </nav>
+  </main>
+
+  <footer>
+    <p class="cta">Hiring for Android? I'd like to hear about it.</p>
+    <p><a href="mailto:adirobbie@gmail.com">adirobbie@gmail.com</a> · <a href="https://github.com/robbieadi">GitHub</a> · Jakarta, open to relocation</p>
+  </footer>
+</div>
+<script src="../assets/theme.js"></script>
+</body>
+</html>

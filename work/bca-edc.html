@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A payment terminal with no SDK · Robbie Ardiansyah</title>
+<meta name="description" content="Integrating a BCA EDC payment terminal into a self-service kiosk over USB serial, from protocol documentation alone.">
+<meta property="og:title" content="A payment terminal with no SDK">
+<meta property="og:description" content="Integrating a BCA EDC payment terminal into a self-service kiosk over USB serial, from protocol documentation alone.">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131514" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="bar">
+    <a class="home" href="../">Robbie Ardiansyah</a>
+    <nav aria-label="Primary">
+      <a class="opt" href="../#work">Work</a>
+      <a class="opt" href="../#apps">Apps</a>
+      <a href="mailto:adirobbie@gmail.com">Email</a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="article-head">
+      <a class="back" href="../#work">← All work</a>
+      <h1>A payment terminal with no SDK</h1>
+      <p class="lede">A self-service kiosk needed to take payments through a BCA EDC terminal plugged in over USB. BCA supplied protocol documentation and nothing else, so I implemented the protocol myself.</p>
+      <dl class="facts">
+        <div><dt>Product</dt><dd><a href="https://play.google.com/store/apps/details?id=id.co.stamps.kiosk">OMNI Kiosk</a></dd></div>
+        <div><dt>When</dt><dd>2024 – 2025</dd></div>
+        <div><dt>Payments</dt><dd>QRIS, BCA cards</dd></div>
+        <div><dt>Built with</dt><dd>Kotlin, usb-serial-for-android</dd></div>
+      </dl>
+    </div>
+
+    <article class="prose">
+      <h2><span class="k">01</span>The problem</h2>
+      <p>OMNI Kiosk is the customer-facing ordering screen that sits in a restaurant. A customer builds an order, pays, and gets a receipt without speaking to anyone. For card and QRIS payments through BCA, that means an EDC terminal connected to the kiosk. The kiosk has to start a transaction on that terminal, wait while the customer taps a card or scans a QRIS code, and find out whether the payment went through.</p>
+
+      <h2><span class="k">02</span>The constraint</h2>
+      <p>Most payment integrations come with a vendor SDK that hides the transport. This one didn't. What we had was the protocol document: message layout, field definitions, and the expected request and response sequence. Everything between "build a request" and "parse a response" was up to me.</p>
+
+      <h2><span class="k">03</span>What I built</h2>
+      <p>There's no vendor library in the kiosk's build, only <code>usb-serial-for-android</code> for the port itself. The rest is written against the protocol document:</p>
+      <ul>
+        <li><strong>Framing.</strong> Each request is built field by field into a fixed-width message, then framed with start and end markers, a length prefix, and an LRC checksum, which is an XOR over the frame's bytes.</li>
+        <li><strong>The exchange.</strong> Write the request, wait for the terminal to acknowledge it, then poll every half second while the customer is at the terminal. Each response is checksum-verified, parsed field by field, and acknowledged before the port is closed.</li>
+        <li><strong>A transport seam.</strong> The protocol code only sees a terminal that can <em>write</em>, <em>read</em> and <em>close</em>. USB serial is one implementation of that. When a LAN-connected terminal came along, it became a second implementation over a socket, and the protocol code didn't change.</li>
+      </ul>
+      <p>The shape of the exchange, simplified:</p>
+<pre><code>// Simplified sketch: field layout and message codes omitted.
+suspend fun pay(amount: Long): Response =
+    withTimeout(paymentTimeout) { exchange(amount) }   // timeout is a setting
+
+private suspend fun exchange(amount: Long): Response {
+    terminal.write(frame(saleMessage(amount)))
+    awaitAck()                                         // give up after a few polls
+
+    while (true) {
+        val raw = terminal.read()
+        if (raw.isEmpty()) { delay(500); continue }    // customer still paying
+        if (!lrcMatches(raw)) throw EdcException("Bad LRC")
+
+        val response = parse(raw)
+        if (response.amount &lt;= 0) throw EdcException("No payment was made")
+        if (!response.hasApprovalCode()) continue      // not final yet, keep polling
+
+        terminal.write(ACK)
+        return response
+    }
+}
+
+// Start marker + length + message + end marker + checksum.
+fun frame(message: ByteArray): ByteArray {
+    val body = lengthOf(message) + message + ETX
+    return byteArrayOf(STX) + body + lrc(body)         // lrc = XOR of every byte
+}</code></pre>
+
+      <h2><span class="k">04</span>Making it hold up on a shop floor</h2>
+      <p>Getting one transaction through was the easy part. Most of the work came after:</p>
+      <ul>
+        <li><strong>Trusting the right response.</strong> A response with a bad checksum is rejected outright. A zero amount means no payment was made. A card payment only counts once the response carries an approval code.</li>
+        <li><strong>QRIS is two steps.</strong> A QRIS payment request is followed by a separate inquiry that confirms whether it was paid. A setting decides whether that inquiry runs automatically.</li>
+        <li><strong>Customers who walk away.</strong> The whole exchange runs under a configurable timeout, so an abandoned payment closes the port and frees the kiosk instead of leaving it stuck.</li>
+        <li><strong>Cables and power.</strong> A connection check, handled connectivity errors, and a persisted USB device configuration so the kiosk finds the same terminal after a restart.</li>
+        <li><strong>Visibility.</strong> Every frame written and read is logged to a file, so a failed payment in a store can be examined afterwards. A configurable testing account is available for testing and hidden in production.</li>
+      </ul>
+      <h2><span class="k">05</span>Result</h2>
+      <div class="callout"><p>The kiosk takes QRIS and BCA card payments through the terminal, built from the protocol document alone.</p></div>
+      <p>It's the piece of work I'd point to first. It's specific and unusual, and nothing was there to lean on. Every failure mode had to be found, understood and handled by hand.</p>
+    </article>
+
+    <nav class="next" aria-label="More case studies">
+      
+      <a class="r" href="order-sync.html"><small>Next</small>Keeping open orders in sync across tills</a>
+    </nav>
+  </main>
+
+  <footer>
+    <p class="cta">Hiring for Android? I'd like to hear about it.</p>
+    <p><a href="mailto:adirobbie@gmail.com">adirobbie@gmail.com</a> · <a href="https://github.com/robbieadi">GitHub</a> · Jakarta, open to relocation</p>
+  </footer>
+</div>
+<script src="../assets/theme.js"></script>
+</body>
+</html>

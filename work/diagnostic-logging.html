@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Logs for bugs nobody could reproduce · Robbie Ardiansyah</title>
+<meta name="description" content="A size-capped on-device diagnostic log, uploadable on demand, built to debug field issues that never showed up in-house.">
+<meta property="og:title" content="Logs for bugs nobody could reproduce">
+<meta property="og:description" content="A size-capped on-device diagnostic log, uploadable on demand, built to debug field issues that never showed up in-house.">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131514" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="wrap">
+  <header class="bar">
+    <a class="home" href="../">Robbie Ardiansyah</a>
+    <nav aria-label="Primary">
+      <a class="opt" href="../#work">Work</a>
+      <a class="opt" href="../#apps">Apps</a>
+      <a href="mailto:adirobbie@gmail.com">Email</a>
+      <button class="theme-toggle" type="button" aria-label="Toggle theme">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <div class="article-head">
+      <a class="back" href="../#work">← All work</a>
+      <h1>Logs for bugs nobody could reproduce</h1>
+      <p class="lede">Clients kept reporting POS bugs we couldn't reproduce in-house. I designed an on-device diagnostic log that records what the app actually did, and led two junior engineers who built it with AI under my direction.</p>
+      <dl class="facts">
+        <div><dt>Product</dt><dd><a href="https://play.google.com/store/apps/details?id=omni.id.android">Omni POS</a></dd></div>
+        <div><dt>Size cap</dt><dd>25MB, five rotating 5MB files</dd></div>
+        <div><dt>Upload</dt><dd>Firebase Storage</dd></div>
+        <div><dt>Team</dt><dd>Me + two junior engineers</dd></div>
+      </dl>
+    </div>
+
+    <article class="prose">
+      <h2><span class="k">01</span>The problem</h2>
+      <p>A bug report would describe a symptom. By the time it reached us, the state that caused it was gone. Crashlytics only helps when something crashes, and even then not every crash reached it. We'd try to reproduce the problem on our own devices, fail, and end up guessing.</p>
+
+      <h2><span class="k">02</span>The design</h2>
+      <p>Instead of guessing, record what happened. The log captures the things that change state or cross a boundary:</p>
+      <ul>
+        <li><strong>Data changes at the repository level</strong>: every change to orders, items and their values.</li>
+        <li><strong>Network traffic</strong>: requests and responses, success or failure.</li>
+        <li><strong>User actions</strong>: every interaction during a shift.</li>
+        <li><strong>Hardware</strong>: what was printed and to which printer, by readable name rather than an internal ID.</li>
+      </ul>
+      <p>A POS runs all day, so the log has a hard cap: <strong>five rotating 5MB files, 25MB in total</strong>. When the cap is reached, the oldest file goes. The device never fills up, and the most recent history is always there, which is the part a bug report needs.</p>
+      <p>Getting logs off the device matters as much as writing them:</p>
+      <ul>
+        <li><strong>On demand.</strong> From the POS settings, each file is zipped and uploaded to Firebase Storage.</li>
+        <li><strong>After a crash.</strong> The app flags itself and uploads its logs on the next start, along with an export of the local database and preferences. That gives us the state as well as the history.</li>
+        <li><strong>Offline.</strong> If the upload fails because the device is offline, the flag stays set and it retries on the next start.</li>
+      </ul>
+
+      <h2><span class="k">03</span>How the work was split</h2>
+      <p>I owned the design: what to capture, where the boundaries are, how the files behave, and how logs leave the device. Two junior engineers on my team implemented it, using AI to apply the instrumentation across the codebase. They followed my direction and I reviewed the work. I use AI again at the other end, during triage, because a long log is much easier to work through when I can ask questions of it.</p>
+
+      <h2><span class="k">04</span>Result</h2>
+      <p>Bugs that used to stall at "can't reproduce" now come with a record of the changes, network traffic and user actions that led up to them, plus the database state when it matters.</p>
+      <div class="callout"><p>The operations team later started using the logs to flag suspicious user activity. I hadn't built it for that, and I take it as a sign the log captures the right things.</p></div>
+    </article>
+
+    <nav class="next" aria-label="More case studies">
+      <a href="printers.html"><small>Previous</small>One contract for every receipt printer</a>
+      <a class="r" href="fleet.html"><small>Next</small>Fleet, a delivery platform from scratch</a>
+    </nav>
+  </main>
+
+  <footer>
+    <p class="cta">Hiring for Android? I'd like to hear about it.</p>
+    <p><a href="mailto:adirobbie@gmail.com">adirobbie@gmail.com</a> · <a href="https://github.com/robbieadi">GitHub</a> · Jakarta, open to relocation</p>
+  </footer>
+</div>
+<script src="../assets/theme.js"></script>
+</body>
+</html>
